@@ -1,4 +1,15 @@
-# http://falconframework.org/
+#!/usr/bin/python3
+# Copyright (c) 2015 Benjamin and Barton Massey
+# [This program is licensed under the GPL version 3 or later.]
+# Please see the file COPYING in the source
+# distribution of this software for license terms.
+
+# FalconPunch: Lakeridge Smash Club Ratings API
+
+# Uses http://challonge.com for tournament info.
+
+# Uses http://falconframework.org WSGI framework with Gunicorn
+# to provide web API.
 
 import falcon
 import json
