@@ -18,8 +18,10 @@ assert username != "" and api_key != ""
     
 set_credentials(username, api_key)
 
-ts = tournaments.index()
+ts = tournaments.index(created_after="2015-04-03")
 for t in ts:
+    if not t["started-at"]:
+        continue
     tid = t["id"]
     names = dict()
     ps = participants.index(tid)
