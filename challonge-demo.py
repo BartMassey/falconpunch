@@ -11,7 +11,6 @@ from os import environ
 import elo
 
 ratings = dict()
-names = dict()
 
 username=environ.get("CHALLONGE_USERNAME", "")
 api_key=environ.get("CHALLONGE_API_KEY", "")
@@ -22,6 +21,7 @@ set_credentials(username, api_key)
 ts = tournaments.index()
 for t in ts:
     tid = t["id"]
+    names = dict()
     ps = participants.index(tid)
     for p in ps:
         pid = p["id"]
@@ -30,8 +30,14 @@ for t in ts:
         names[pid] = pn
     ms = matches.index(tid)
     for m in ms:
-        p1 = m["player1-id"]
-        p2 = m["player2-id"]
+        id1 = m["player1-id"]
+        if not id1:
+            continue
+        p1 = names[id1]
+        id2 = m["player2-id"]
+        if not id2:
+            continue
+        p2 = names[id2]
         ss = m["scores-csv"]
         if not p1 or not p2 or not ss:
             continue
@@ -44,5 +50,4 @@ for t in ts:
         ratings[p1] = elo.update(ratings[p1], ratings[p2], (s + 3) / 6)
         ratings[p2] = elo.update(ratings[p2], ratings[p1], ((3 - s) + 3) / 6)
 for p in ratings:
-    pn = names[p]
-    print "%s (%s)" % (pn, p), round(ratings[p])
+    print p, round(ratings[p])
