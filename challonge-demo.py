@@ -47,7 +47,9 @@ for t in ts:
             ratings[p1] = 1000
         if p2 not in ratings:
             ratings[p2] = 1000
-        ratings[p1] = elo.update(ratings[p1], ratings[p2], (s + 3) / 6)
-        ratings[p2] = elo.update(ratings[p2], ratings[p1], ((3 - s) + 3) / 6)
+        p1r = elo.update(ratings[p1], ratings[p2], (s + 3) / 6)
+        p2r = elo.update(ratings[p2], ratings[p1], (-s + 3) / 6)
+        ratings[p1] = p1r
+        ratings[p2] = p2r
 for p in ratings:
     print p, round(ratings[p])
