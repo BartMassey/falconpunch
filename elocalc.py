@@ -11,19 +11,15 @@
 from sys import argv
 import elo
 
-# UCSF uses 32 for weaker players,
-# 16 for masters.
-k = 32
-
 # Current rating of a.
 ra = int(argv[1])
 # Current rating of b.
 rb = int(argv[2])
-# Score difference in the match.
-s = int(argv[3])
+# Score difference in the match (0..1).
+s = float(argv[3])
 
 # Normalized actual score of a.
 ns = (s + 3) / 6
 
 # Print adjusted Elo rating of a.
-print(elo.update(ra, rb, s, k=k))
+print(elo.update(ra, rb, s))

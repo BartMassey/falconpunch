@@ -8,6 +8,7 @@
 
 from challonge import *
 from os import environ
+from sys import stderr
 import elo
 
 ratings = dict()
@@ -43,15 +44,34 @@ for t in ts:
         ss = m["scores-csv"]
         if not p1 or not p2 or not ss:
             continue
-        assert ss[1] == '-' and ss[0].isdigit() and ss[2].isdigit()
+        if len(ss) != 3 or ss[1] != '-' or \
+           not ss[0].isdigit() or not ss[2].isdigit():
+            print >> stderr, "warning: invalid score", ss, "for", \
+                p1, "v", p2, "in", t["name"]
+            continue
         s = int(ss[0]) - int(ss[2])
+        if s < -3 or s > 3:
+            def pin(s0):
+                global s
+                print >> stderr, "warning: score", s, "adjusted to", s0, \
+                    "for", p1, "v", p2, "in", t["name"]
+                s = s0
+            if s < -3:
+                pin(-3)
+            if s > 3:
+                pin(3)
         if p1 not in ratings:
             ratings[p1] = 1000
         if p2 not in ratings:
             ratings[p2] = 1000
-        p1r = elo.update(ratings[p1], ratings[p2], (s + 3) / 6)
-        p2r = elo.update(ratings[p2], ratings[p1], (-s + 3) / 6)
-        ratings[p1] = p1r
-        ratings[p2] = p2r
-for p in ratings:
-    print p, round(ratings[p])
+        p1r = ratings[p1]
+        p2r = ratings[p2]
+        sn = (s + 3.0) / 6.0
+        ratings[p1] = elo.update(p1r, p2r, sn)
+        ratings[p2] = elo.update(p2r, p1r, 1.0 - sn)
+        def d(p, pr):
+            return p + ":" + str(pr) + "->" + str(ratings[p])
+        # print >> stderr, "update", sn, d(p1, p1r), d(p2, p2r)
+
+for p in sorted(ratings, key=ratings.__getitem__, reverse=True):
+    print p, ratings[p]
