@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/python2
 # Copyright (c) 2015 Benjamin and Barton Massey
 # [This program is licensed under the GPL version 3 or later.]
 # Please see the file COPYING in the source

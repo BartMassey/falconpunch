@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/python2
 # Copyright (c) 2015 Benjamin and Barton Massey
 # [This program is licensed under the GPL version 3 or later.]
 # Please see the file COPYING in the source
@@ -22,4 +22,4 @@ s = float(argv[3])
 ns = (s + 3) / 6
 
 # Print adjusted Elo rating of a.
-print(elo.update(ra, rb, s))
+print elo.update(ra, rb, s)
