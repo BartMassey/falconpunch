@@ -9,14 +9,18 @@
 from challonge import *
 from os import environ
 from sys import stderr
-import elo
+import elo, time
+
+# Who the program should print out scores for
+topN = ["Lyme", "Bean", "Fest", "Nook", "Couch", "Meero", "Ai", "Justin", "Succulent"]
 
 ratings = dict()
 
 username=environ.get("CHALLONGE_USERNAME", "")
 api_key=environ.get("CHALLONGE_API_KEY", "")
+
 assert username != "" and api_key != ""
-    
+
 set_credentials(username, api_key)
 
 ts = tournaments.index(created_after="2015-04-03")
@@ -42,6 +46,18 @@ for t in ts:
             continue
         p2 = names[id2]
         ss = m["scores-csv"]
+
+        ## EXCEPTIONS FOR INCORRECT RECORDINGS
+        if p1 == "Fest" and p2 == "Nook" and ss == "2-0":
+            ss = "0-2"
+        if p1 == "Bean" and p2 == "Nook" and ss == "0-222":
+            ss = "0-2"
+        if p1 == "Ai" and p2 == "Justin" and ss == "0-69":
+            ss = "0-2"
+        if p1 == "Meero" and p2 == "Lyme" and ss == "0-0":
+            ss == "0-2"
+
+        print p1, p2, ss
         if not p1 or not p2 or not ss:
             continue
         if len(ss) != 3 or ss[1] != '-' or \
@@ -73,5 +89,11 @@ for t in ts:
             return p + ":" + str(pr) + "->" + str(ratings[p])
         # print >> stderr, "update", sn, d(p1, p1r), d(p2, p2r)
 
+## ONLY PRINTS OUT THOSE WHO ARE IN TOP N
+rank = 1
 for p in sorted(ratings, key=ratings.__getitem__, reverse=True):
-    print p, ratings[p]
+	if p in topN:
+		print rank, " ", p, " "*(6-len(p)), int(ratings[p])
+		rank += 1
+
+time.sleep(5)
