@@ -17,5 +17,5 @@ def update(ra, rb, s, k=32):
     assert s >= 0 and s <= 1
     # Expected score of a based on ratings.
     ea = 1.0 / (1.0 + 10.0**((rb - ra) / 400.0))
-    # Adjusted ratig of a
-    return round(ra + k * (s - ea))
+    # Adjusted rating of a
+    return int(round(ra + k * (s - ea)))
